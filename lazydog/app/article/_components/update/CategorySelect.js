@@ -5,7 +5,7 @@ const CategorySelect = memo(({ selectedCategory, setSelectedCategory, categoryOp
     <select
       className="form-select my-3"
       value={selectedCategory}
-      style={{ width: '154px' }}
+      style={{ width: '200px' }}
       onChange={(e) => setSelectedCategory(Number(e.target.value))}
     >
       <option value="">請選擇主題</option>

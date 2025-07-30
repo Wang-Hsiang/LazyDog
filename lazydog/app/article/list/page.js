@@ -113,7 +113,7 @@ const ArticlePage = () => {
               <input
                 type="text"
                 className="form-control"
-                style={{ border: 'none', height: '40px', borderRadius: '5px' }}
+                style={{ border: 'none', height: '100%', borderRadius: '5px' }}
                 placeholder="搜尋文章..."
                 value={searchTerm}
                 onChange={handleSearchChange}
@@ -125,9 +125,9 @@ const ArticlePage = () => {
             <div className={styles.asideCategory}>
               <h4 className='mb-3'>類別</h4>
               <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
+
+                onClick={() => {
+
                   handleCategorySelect(null); // 選擇「全部」
                 }}
               >
@@ -138,9 +138,9 @@ const ArticlePage = () => {
                 </p>
               </a>
               <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
+
+                onClick={() => {
+
                   handleCategorySelect(1); // 選擇「保健與營養」
                 }}
               >
@@ -149,9 +149,9 @@ const ArticlePage = () => {
                 </p>
               </a>
               <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
+
+                onClick={() => {
+
                   handleCategorySelect(5); // 選擇「開箱」
                 }}
               >
@@ -160,9 +160,9 @@ const ArticlePage = () => {
                 </p>
               </a>
               <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
+
+                onClick={() => {
+
                   handleCategorySelect(2); // 選擇「食譜」
                 }}
               >
@@ -171,9 +171,9 @@ const ArticlePage = () => {
                 </p>
               </a>
               <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
+
+                onClick={() => {
+
                   handleCategorySelect(3); // 選擇「善終」
                 }}
               >
@@ -181,29 +181,40 @@ const ArticlePage = () => {
                   善終
                 </p>
               </a>
+              <a
+
+                onClick={() => {
+
+                  handleCategorySelect(4); // 選擇「行為知識」
+                }}
+              >
+                <p className={activeCategory === 4 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                  行為知識
+                </p>
+              </a>
             </div>
             <div >
               <h4 className={styles.H4}>延伸閱讀</h4>
-              {articles
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 5)
-                .map((article) => (
-                  <AsideCard key={article.id} {...article} />
-                ))}
+              {
+                [...articles] // <-- 關鍵：先創建一個副本
+                  .sort(() => Math.random() - 0.5)
+                  .slice(0, 5)
+                  .map((article) => (
+                    <AsideCard key={article.id} {...article} />
+                  ))
+              }
             </div>
           </aside>
 
           {/* 主要內容 */}
-          <main
-          // style={{display:'flex',flexDirection:'column',gap:'25px'}}       
-          >
+          <main>
 
             <div className={styles.RWDfilter}>
               <div className="input-group my-3" style={{ border: '.2px solid grey', borderRadius: '5px' }}>
                 <input
                   type="text"
                   className="form-control"
-                  style={{ border: 'none', height: '40px', borderRadius: '5px' }}
+                  style={{ border: 'none', height: '100%', borderRadius: '5px' }}
                   placeholder="搜尋文章..."
                   value={searchTerm}
                   onChange={handleSearchChange}
@@ -234,9 +245,9 @@ const ArticlePage = () => {
                       style={{ width: '366px' }}
                     >
                       <a
-                        href="#"
+
                         onClick={(e) => {
-                          e.preventDefault();
+
                           handleCategorySelect(null); // 選擇「全部」
                         }}
                       >
@@ -247,9 +258,9 @@ const ArticlePage = () => {
                         </p>
                       </a>
                       <a
-                        href="#"
+
                         onClick={(e) => {
-                          e.preventDefault();
+
                           handleCategorySelect(1); // 選擇「保健與營養」
                         }}
                       >
@@ -258,9 +269,9 @@ const ArticlePage = () => {
                         </p>
                       </a>
                       <a
-                        href="#"
+
                         onClick={(e) => {
-                          e.preventDefault();
+
                           handleCategorySelect(5); // 選擇「開箱」
                         }}
                       >
@@ -269,9 +280,9 @@ const ArticlePage = () => {
                         </p>
                       </a>
                       <a
-                        href="#"
+
                         onClick={(e) => {
-                          e.preventDefault();
+
                           handleCategorySelect(2); // 選擇「食譜」
                         }}
                       >
@@ -280,9 +291,9 @@ const ArticlePage = () => {
                         </p>
                       </a>
                       <a
-                        href="#"
+
                         onClick={(e) => {
-                          e.preventDefault();
+
                           handleCategorySelect(3); // 選擇「善終」
                         }}
                       >
@@ -300,25 +311,20 @@ const ArticlePage = () => {
             </button>
             <div
               className={styles.main}
-            // style={{ display: 'flex', flexDirection: 'column', gap: '25px',paddingBottom:'100px' }}
             >
               {currentArticles.length > 0 ? (
                 currentArticles.map((article) => (
-
-                  // element="div"
-
                   <MainCard key={article.id} {...article} />
-
                 ))
               ) : (
                 <p>沒有符合條件的文章</p>
               )}
             </div>
-
-
             <div >
               <h4 className={styles.RWDH4}>延伸閱讀</h4>
-              {articles
+              { 
+              [...articles]
+
                 .sort(() => Math.random() - 0.5)
                 .slice(0, 5)
                 .map((article) => (
@@ -336,9 +342,9 @@ const ArticlePage = () => {
               <li className={`${styles.PageItem} page-item ${page === 1 ? 'disabled' : ''}`}>
                 <a
                   className={`${styles.PageLink} page-link`}
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
+
+                  onClick={() => {
+
                     if (page > 1) handlePageChange(page - 1);
                   }}
                 >
@@ -346,17 +352,17 @@ const ArticlePage = () => {
                 </a>
               </li>
 
-              {/* 动态生成页码范围 */}
+
               {[...Array(totalPages)]
-                .map((_, i) => i + 1) // 生成 1 到 totalPages 的数组
-                .filter((i) => i >= page - 1 && i <= page + 1) // 只保留当前页及其前后各一页
+                .map((_, i) => i + 1)
+                .filter((i) => i >= page - 1 && i <= page + 1)
                 .map((i) => (
                   <li key={i} className={`${styles.PageItem} page-item`}>
                     <a
-                      className={`${styles.PageLink} page-link ${page === i ? styles.activePage : ''}`} // 当前页添加 activePage 类
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
+                      className={`${styles.PageLink} page-link ${page === i ? styles.activePage : ''}`}
+
+                      onClick={() => {
+
                         handlePageChange(i);
                       }}
                     >
@@ -369,9 +375,9 @@ const ArticlePage = () => {
               <li className={`${styles.PageItem} page-item ${page === totalPages ? 'disabled' : ''}`}>
                 <a
                   className={`${styles.PageLink} page-link`}
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
+
+                  onClick={() => {
+
                     if (page < totalPages) handlePageChange(page + 1);
                   }}
                 >

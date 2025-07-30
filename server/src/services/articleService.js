@@ -14,7 +14,6 @@ export const getAllarticle = async () => {
        LEFT JOIN article_type ON articles.category_id = article_type.id
        WHERE articles.is_deleted = 0 AND users.is_deleted = 0`
     );
-    // console.log(articles)
     return articles;
   } catch (error) {
     throw new Error(" 無法取得所有文章：" + error.message);
@@ -23,7 +22,6 @@ export const getAllarticle = async () => {
 
 // 獲取指定文章
 export const getIdS = async (id) => {
-  // console.log("getIdS:" + id)
   try {
     const sqlString = 
     `SELECT articles.*, 
@@ -43,10 +41,8 @@ export const getIdS = async (id) => {
     LEFT JOIN comments ON articles.id = comments.article_id 
     LEFT JOIN users AS comment_users ON comments.user_id = comment_users.id 
     WHERE articles.is_deleted = 0 AND users.is_deleted = 0 AND articles.id = ?`;
-    // console.log(sqlString);
 
     const [articles] = await pool.query(sqlString, [id]);
-    // console.log([articles])
     return articles;
   } catch (error) {
     throw new Error(`找不到 ${id} 文章，文章可能不存在或可能已被刪除：${error.message}`);
@@ -179,16 +175,16 @@ export const searchKeywordS = async (keyword) => {
       article_img.url AS cover_image,
       users.name AS name,
       article_type.name AS category_name,
-      comment.id AS comment_id,
-       comment.content AS comment_content,
+      comments.id AS comment_id,
+       comments.content AS comment_content,
        comment_users.name AS commenter_name, 
        comment_users.user_img AS commenter_img
       FROM articles 
       LEFT JOIN article_img ON articles.id = article_img.article_id 
       LEFT JOIN users ON articles.author_id = users.id
       LEFT JOIN article_type ON articles.category_id = article_type.id
-      LEFT JOIN comment ON articles.id = comment.article_id 
-      LEFT JOIN users AS comment_users ON comment.user_id = comment_users.id
+      LEFT JOIN comments ON articles.id = comments.article_id 
+      LEFT JOIN users AS comment_users ON comments.user_id = comment_users.id
       WHERE (articles.title LIKE ?) AND articles.is_deleted = 0 AND users.is_deleted = 0`,
       [`%${keyword}%`]
     );

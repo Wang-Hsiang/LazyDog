@@ -1,8 +1,9 @@
+// /app/article/list/detail/page.js
+
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react"; 
 import { useParams } from "next/navigation";
-import Link from "next/link";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Card from "../../_components/detail/MoreCard";
@@ -22,11 +23,25 @@ export default function ArticleDetail() {
   const [visibleComments, setVisibleComments] = useState(3); // 控制顯示留言數量
   const [expanded, setExpanded] = useState(false); // 記錄展開狀態
 
+  // 創建 useRef 來追蹤組件的掛載狀態和請求的有效性
+  const isActiveRef = useRef(true);
+
+  // 修改 useEffect 來處理競態條件和組件卸載問題
   useEffect(() => {
+    // 當 useEffect 運行時，確保旗標為 true
+    isActiveRef.current = true;
+
     if (id) {
-      getArticle(id);
+      // ⚠️ 將 isActiveRef 傳遞給 getArticle
+      getArticle(id, isActiveRef);
     }
-  }, [id]);
+
+    // 清理函數：在組件卸載或依賴項 (id) 改變時執行
+    return () => {
+      isActiveRef.current = false; // 將旗標設置為 false，指示正在進行的請求結果應被忽略
+    };
+  }, [id, getArticle]); // 依賴 id 和 getArticle (getArticle 由於 useCallback 而穩定)
+
 
   if (loading) return <p>載入中...</p>;
   if (error) return <p>錯誤: {error}</p>;
@@ -83,7 +98,7 @@ export default function ArticleDetail() {
                 ) : (
                   comments.slice(0, visibleComments).map((comment, index) => (
                     <Comment
-                      key={index}
+                      key={comment.id || index} // 使用 comment.id 作為 key 更穩定
                       content={comment.content}
                       author={comment.author}
                       author_img={comment.author_img}
@@ -96,17 +111,13 @@ export default function ArticleDetail() {
 
               {/* 如果留言數大於 3，顯示展開/收起按鈕 */}
               <div
-                
-              className="w-100 d-flex justify-content-end"
-              style={{position:'relative',padding:'25px 0'}}
+                className="w-100 d-flex justify-content-end"
+                style={{position:'relative',padding:'25px 0'}}
               >
                 {comments.length > 3 && (
                   <button
                     onClick={toggleComments}
- 
                     className={styles.moreComments}
-                    // className="btn btn-outline-primary mt-3"
-
                   >
                     {expanded ? "收起留言" : "顯示更多"}
                   </button>

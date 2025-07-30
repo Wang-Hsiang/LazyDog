@@ -1,9 +1,10 @@
 import { getAllarticle, getIdS, createArticlesS, deleteArticleS, updateArticleS, searchKeywordS } from "../services/articleService.js";
+import fs from 'fs';
+import path from 'path';
 
-// getIdS, createArticlesS, updateArticleS, deleteArticleS searchKeywordS
 
 // 獲取所有文章
-export const getArticles = async (req, res) => {
+export const getArticles = async (req,res) => {
   try {
     const articles = await getAllarticle();
     if (articles.length === 0) {
@@ -26,60 +27,8 @@ export const getArticles = async (req, res) => {
 
 
 
-// 取得指定文章
-// export const getId = async (req, res) => {
-//   const { id } = req.params;
-//   // console.log("getId:" + id)
-//   try {
-//     const results = await getIdS(id);
-//     // console.log(results);
-
-//     if (!results || results.length === 0) {
-//       return res.status(404).json({ message: "文章不存在" });
-//     }
-
-//     // 格式化日期（只顯示 YYYY-MM-DD）
-//     const formatDate = (date) => date ? new Date(date).toISOString().split('T')[0] : null;
-
-//     // 組合文章資料
-//     const article = {
-//       id: results[0].id,
-//       title: results[0].title,
-//       content: results[0].content,
-//       cover_image: results[0].cover_image,
-//       author_id: results[0].user_id,
-//       author_name: results[0].name,
-//       category_id: results[0].category_id,
-//       category_name: results[0].category_name,
-//       created_at: formatDate(results[0].created_at),
-//       updated_at: formatDate(results[0].updated_at), // 確保 updated_at 也被格式化
-//       comments: []
-//     };
-
-//     const commentMap = new Map(); // 用 Map 避免重複
-
-//       results.forEach(row => {
-//         if (row.comment_id && !commentMap.has(row.comment_id) && row.is_deleted !== 1) {
-//             commentMap.set(row.comment_id, {
-//                 id: row.comment_id,
-//                 content: row.comment_content,
-//                 author: row.commenter_name,
-//                 author_img: row.commenter_img,
-//                 is_deleted: row.is_deleted
-//             });
-//         }
-//     });
 
 
-
-//     article.comments = Array.from(commentMap.values());
-//     res.json(article);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-import fs from 'fs';
-import path from 'path';
 
 export const getId = async (req, res) => {
   const { id } = req.params;

@@ -12,7 +12,10 @@ export default function AsideCard({ id, title, cover_image, created_at }) {
                 // className={styles.asideRead}
                 className={`${styles.asideRead} row mt-2`}
             >
-                <div className="col-3">
+                <div 
+                className="col-3"
+                style={{ padding:'0 10px'}}
+                >
                     <div
                     className="ratio ratio-1x1 w-100"
                     >
@@ -25,9 +28,11 @@ export default function AsideCard({ id, title, cover_image, created_at }) {
                     </div>
                 </div>
                 <div
-                    className="col-9">
+                    className="col-9" 
+                    style={{ padding:'0 ',height:'75.32px' }}
+                    >
                     <div className={styles.title2}>{title}</div>
-                    <p style={{ color: '#9F9F9F' }}>{created_at}</p>
+                    <p style={{ color: '#9F9F9F',fontSize:'16px' }}>{created_at}</p>
                 </div>
             </Link>
 

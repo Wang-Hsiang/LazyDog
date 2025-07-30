@@ -65,7 +65,7 @@ export default function MyCard2({ id, title, cover_image, created_at }) {
                                         >編輯
                                         </Link>
                                         </Dropdown.Item>
-                                        <Dropdown.Item className={`${styles.item}`} onClick={handleShow}>刪除</Dropdown.Item>
+                                        <Dropdown.Item className={`${styles.item}`} onClick={handleShow} style={{ fontSize: '16px'}}>刪除</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
 

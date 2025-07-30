@@ -86,12 +86,13 @@
 }
 
 .card {
+  margin: 10px;
   width: 818.69px;
   height: 625px;
   border: none;
   display: flex;
   flex-direction:column;
-  gap: 5px;
+  gap: 8px;
 
 }
 .card:hover {
@@ -117,7 +118,11 @@
   font-size: 24px;
   color: black;
 }
-
+.font{
+  font-size: 16px;
+  position: relative;
+  top:6px
+}
 
 
 .customLink {
@@ -139,7 +144,9 @@
 }
 .asideRead {
   border-radius: 5px;
-  padding-top: 14px;
+  padding:10px 0 ;
+  display: flex;
+  align-items: center;
   .title2{
     color:black;
     height: 50px;

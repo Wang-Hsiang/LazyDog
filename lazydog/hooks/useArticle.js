@@ -30,17 +30,20 @@ function useArticles() {
     }, []); // ✅ 使用 useCallback 包裹，確保函式穩定
 
     // 取得單篇文章（詳情用）
-    const getArticle = useCallback(async (id) => {
+    const getArticle = useCallback(async (id, isActiveRef) => { 
         if (!id) {
-            setArticle(null);
-            setComments([]);
-            return null; // 返回 null 以避免後續邏輯錯誤
+            // 由於 id 為 null，直接返回，不會觸發加載狀態
+            if (isActiveRef.current) { // 僅在有效時重置狀態
+                setArticle(null);
+                setComments([]);
+            }
+            return null;
         }
-        let isCurrentRequestValid = true; // 競態條件控制
-
         try {
-            setLoading(true);
-            setError(null);
+            if (isActiveRef.current) { // 僅在請求有效時設置加載狀態
+                setLoading(true);
+                setError(null);
+            }
 
             const response = await fetch(`${API_URL}/${id}`);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -49,24 +52,20 @@ function useArticles() {
             data.comments.forEach((comment) => {
                 comment.author_img = `http://localhost:5000/auth/${comment.author_img}`;
             });
-            
-            // http://localhost:5000/auth/images/1.jpg //
-            console.log(data.comments)
-            // 目前前台顯示comment.author_img=10.jpg
-            if (isCurrentRequestValid) {
+            if (isActiveRef.current) {
                 setArticle(data);
                 setComments(data.comments || []);
-                return data; // ✅ 返回文章資料
+                return data; // 返回文章資料
             }
-            
-
         } catch (err) {
-            if (isCurrentRequestValid) {
+            if (isActiveRef.current) {
                 setError(err.message);
                 setArticle(null);
             }
         } finally {
-            if (isCurrentRequestValid) setLoading(false);
+            if (isActiveRef.current) {
+                setLoading(false);
+            }
         }
 
         return null; // 如果請求無效或出錯，返回 null

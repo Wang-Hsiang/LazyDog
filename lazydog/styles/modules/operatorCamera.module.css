@@ -182,6 +182,9 @@
   color: white;
   background-color: #ff9538;
   border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .btn:hover {
   background-color: #fdf9f5;

@@ -25,11 +25,9 @@ const CommentSection = () => {
 
 
     // 設置默認頭像
-    const defaultAvatar = '/path/to/default-avatar.jpg';
-    // const modifiedAvatar = user?.avatar ? user.avatar.replace('/images/', '/') : defaultAvatar;
+    
     const modifiedAvatar = user?.avatar ? user.avatar.replace('/images/', '/') : '';
-    // const modifiedAvatar = user.avatar 
-    // console.log(defaultAvatar)
+   
     console.log(modifiedAvatar)
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -85,7 +83,7 @@ const CommentSection = () => {
                 <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className={`btn ms-1 ${style.btn}`}
+                    className={`btn ms-5 ${style.btn}`}
                 >
                     <i className="bi bi-send-fill"></i>
                 </button>
