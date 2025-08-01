@@ -16,71 +16,62 @@ import style from '../../../styles/modules/operatorCamera.module.css';
 const ArticlePage = () => {
   const { articles, loading, error } = useArticles();
   const [page, setPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [activeCategory, setActiveCategory] = useState(null);
-  const [sortOrder, setSortOrder] = useState('desc');
-  const [searchTerm, setSearchTerm] = useState("");
-  const itemsPerPage = 5;
+  const [Category, setCategory] = useState(null);
+  const [CategoryStyle, setCategoryStyle] = useState(null);
+  const [SortOrder, setSortOrder] = useState('desc');
+  const [SearchTing, setSearchTing] = useState("");
+  const PageMax = 5;
   const { user } = useAuth()
 
-
-
   // 判斷有無使用者登入
-  const handleClick = (event) => {
+  const userLogin = (event) => {
     if (!user) {
       event.preventDefault(); // 阻止預設跳轉行為
       window.location.href = "http://localhost:3000/login"; // 跳轉到登入頁
     }
   };
 
-  // 搜尋處理
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    setPage(1); // 每次搜尋重置頁碼
+  // 分類
+  const CategorySelect = (categoryId) => {
+    setCategory(categoryId);
+    setCategoryStyle(categoryId);
+    setPage(1);
   };
-
-  // 過濾分類
-  const filteredByCategory = selectedCategory
-    ? articles.filter(article => article.category_id === selectedCategory)
+   const filter = Category
+    ? articles.filter(article => article.category_id === Category)
     : articles;
 
-  // 過濾搜尋結果
-  const filteredArticles = filteredByCategory.filter(article =>
-    article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    article.content.toLowerCase().includes(searchTerm.toLowerCase())
+  // 搜尋
+  const SearchIng = (e) => {
+    setSearchTing(e.target.value);
+    setPage(1); // 每次搜尋重置頁碼
+  };
+  const filteredArticles = filter.filter(article =>
+    article.title.toLowerCase().includes(SearchTing.toLowerCase()) 
   );
 
-  // 排序文章
+  // 排序
   const sortedArticles = [...filteredArticles].sort((a, b) => {
     const dateA = new Date(a.created_at);
     const dateB = new Date(b.created_at);
-    return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+    return SortOrder === 'asc' ? dateA - dateB : dateB - dateA;
   });
-
-  const totalPages = Math.ceil(sortedArticles.length / itemsPerPage);
-  const currentArticles = sortedArticles.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
-
-  // 分類選擇
-  const handleCategorySelect = (categoryId) => {
-    setSelectedCategory(categoryId);
-    setActiveCategory(categoryId);
-    setPage(1);
-  };
-
-  // 排序切換
-  const handleSortToggle = () => {
+  const Sort = () => {
     setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
     setPage(1);
   };
+  const Articles = sortedArticles.slice(
+    (page - 1) * PageMax,
+    page * PageMax
+  );
 
-  // 分頁處理
-  const handlePageChange = (newPage) => {
+  // 分頁
+  const totalPages = Math.ceil(sortedArticles.length / PageMax);
+  const Page = (newPage) => {
     if (newPage < 1 || newPage > totalPages) return;
     setPage(newPage);
   };
+
 
   if (loading) return <p>載入中...</p>;
   if (error) return <p className="text-red-500">錯誤：{error}</p>;
@@ -99,7 +90,7 @@ const ArticlePage = () => {
             <Link
               href="http://localhost:3000/article/add_article"
               className={styles.postLink}
-              onClick={handleClick} // 點擊時檢查是否已登入
+              onClick={userLogin} // 點擊時檢查是否已登入
             >
               <i className="bi bi-check-circle"></i> 發布文章
             </Link>
@@ -115,8 +106,8 @@ const ArticlePage = () => {
                 className="form-control"
                 style={{ border: 'none', height: '100%', borderRadius: '5px' }}
                 placeholder="搜尋文章..."
-                value={searchTerm}
-                onChange={handleSearchChange}
+                value={SearchTing}
+                onChange={SearchIng}
               />
               <label className="input-group-text" style={{ background: 'none', border: 'none' }}>
                 <i className="bi bi-search"></i>
@@ -128,11 +119,11 @@ const ArticlePage = () => {
 
                 onClick={() => {
 
-                  handleCategorySelect(null); // 選擇「全部」
+                  CategorySelect(null); // 選擇「全部」
                 }}
               >
                 <p
-                  className={activeCategory === null ? styles.asideCategoryPA : styles.asideCategoryP}
+                  className={CategoryStyle === null ? styles.asideCategoryPA : styles.asideCategoryP}
                 >
                   全部
                 </p>
@@ -141,10 +132,10 @@ const ArticlePage = () => {
 
                 onClick={() => {
 
-                  handleCategorySelect(1); // 選擇「保健與營養」
+                  CategorySelect(1); // 選擇「保健與營養」
                 }}
               >
-                <p className={activeCategory === 1 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                <p className={CategoryStyle === 1 ? styles.asideCategoryPA : styles.asideCategoryP}>
                   保健與營養
                 </p>
               </a>
@@ -152,10 +143,10 @@ const ArticlePage = () => {
 
                 onClick={() => {
 
-                  handleCategorySelect(5); // 選擇「開箱」
+                  CategorySelect(5); // 選擇「開箱」
                 }}
               >
-                <p className={activeCategory === 5 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                <p className={CategoryStyle === 5 ? styles.asideCategoryPA : styles.asideCategoryP}>
                   開箱
                 </p>
               </a>
@@ -163,10 +154,10 @@ const ArticlePage = () => {
 
                 onClick={() => {
 
-                  handleCategorySelect(2); // 選擇「食譜」
+                  CategorySelect(2); // 選擇「食譜」
                 }}
               >
-                <p className={activeCategory === 2 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                <p className={CategoryStyle === 2 ? styles.asideCategoryPA : styles.asideCategoryP}>
                   食譜
                 </p>
               </a>
@@ -174,10 +165,10 @@ const ArticlePage = () => {
 
                 onClick={() => {
 
-                  handleCategorySelect(3); // 選擇「善終」
+                  CategorySelect(3); // 選擇「善終」
                 }}
               >
-                <p className={activeCategory === 3 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                <p className={CategoryStyle === 3 ? styles.asideCategoryPA : styles.asideCategoryP}>
                   善終
                 </p>
               </a>
@@ -185,10 +176,10 @@ const ArticlePage = () => {
 
                 onClick={() => {
 
-                  handleCategorySelect(4); // 選擇「行為知識」
+                  CategorySelect(4); // 選擇「行為知識」
                 }}
               >
-                <p className={activeCategory === 4 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                <p className={CategoryStyle === 4 ? styles.asideCategoryPA : styles.asideCategoryP}>
                   行為知識
                 </p>
               </a>
@@ -196,7 +187,7 @@ const ArticlePage = () => {
             <div >
               <h4 className={styles.H4}>延伸閱讀</h4>
               {
-                [...articles] // <-- 關鍵：先創建一個副本
+                [...articles]
                   .sort(() => Math.random() - 0.5)
                   .slice(0, 5)
                   .map((article) => (
@@ -216,8 +207,8 @@ const ArticlePage = () => {
                   className="form-control"
                   style={{ border: 'none', height: '100%', borderRadius: '5px' }}
                   placeholder="搜尋文章..."
-                  value={searchTerm}
-                  onChange={handleSearchChange}
+                  value={SearchTing}
+                  onChange={SearchIng}
                 />
                 <label className="input-group-text" style={{ background: 'none', border: 'none' }}>
                   <i className="bi bi-search"></i>
@@ -248,11 +239,11 @@ const ArticlePage = () => {
 
                         onClick={(e) => {
 
-                          handleCategorySelect(null); // 選擇「全部」
+                          CategorySelect(null); // 選擇「全部」
                         }}
                       >
                         <p
-                          className={activeCategory === null ? styles.asideCategoryPA : styles.asideCategoryP}
+                          className={CategoryStyle === null ? styles.asideCategoryPA : styles.asideCategoryP}
                         >
                           全部
                         </p>
@@ -261,10 +252,10 @@ const ArticlePage = () => {
 
                         onClick={(e) => {
 
-                          handleCategorySelect(1); // 選擇「保健與營養」
+                          CategorySelect(1); // 選擇「保健與營養」
                         }}
                       >
-                        <p className={activeCategory === 1 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                        <p className={CategoryStyle === 1 ? styles.asideCategoryPA : styles.asideCategoryP}>
                           保健與營養
                         </p>
                       </a>
@@ -272,10 +263,10 @@ const ArticlePage = () => {
 
                         onClick={(e) => {
 
-                          handleCategorySelect(5); // 選擇「開箱」
+                          CategorySelect(5); // 選擇「開箱」
                         }}
                       >
-                        <p className={activeCategory === 5 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                        <p className={CategoryStyle === 5 ? styles.asideCategoryPA : styles.asideCategoryP}>
                           開箱
                         </p>
                       </a>
@@ -283,10 +274,10 @@ const ArticlePage = () => {
 
                         onClick={(e) => {
 
-                          handleCategorySelect(2); // 選擇「食譜」
+                          CategorySelect(2); // 選擇「食譜」
                         }}
                       >
-                        <p className={activeCategory === 2 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                        <p className={CategoryStyle === 2 ? styles.asideCategoryPA : styles.asideCategoryP}>
                           食譜
                         </p>
                       </a>
@@ -294,10 +285,10 @@ const ArticlePage = () => {
 
                         onClick={(e) => {
 
-                          handleCategorySelect(3); // 選擇「善終」
+                          CategorySelect(3); // 選擇「善終」
                         }}
                       >
-                        <p className={activeCategory === 3 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                        <p className={CategoryStyle === 3 ? styles.asideCategoryPA : styles.asideCategoryP}>
                           善終
                         </p>
                       </a>
@@ -306,31 +297,26 @@ const ArticlePage = () => {
                 </div>
               </div>
             </div>
-            <button className={styles.filter} onClick={handleSortToggle}>
-              <i className="bi bi-filter"></i> 依時間排序 {sortOrder === 'asc' ? '↑' : '↓'}
+            <button className={styles.filter} onClick={Sort}>
+              <i className="bi bi-filter"></i> 依時間排序 {SortOrder === 'asc' ? '↑' : '↓'}
             </button>
             <div
               className={styles.main}
             >
-              {currentArticles.length > 0 ? (
-                currentArticles.map((article) => (
+              { Articles.map((article) => (
                   <MainCard key={article.id} {...article} />
-                ))
-              ) : (
-                <p>沒有符合條件的文章</p>
-              )}
+                ))}
             </div>
             <div >
               <h4 className={styles.RWDH4}>延伸閱讀</h4>
-              { 
-              [...articles]
-
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 5)
-                .map((article) => (
-                  <AsideCard2
-                    key={article.id} {...article} />
-                ))}
+              {
+                [...articles]
+                  .sort(() => Math.random() - 0.5)
+                  .slice(0, 5)
+                  .map((article) => (
+                    <AsideCard2
+                      key={article.id} {...article} />
+                  ))}
             </div>
           </main>
 
@@ -339,13 +325,13 @@ const ArticlePage = () => {
           <nav className="page">
             <ul className={styles.ArticlePage}>
               {/* 前一页按钮 */}
-              <li className={`${styles.PageItem} page-item ${page === 1 ? 'disabled' : ''}`}>
+              <li className={`${styles.PageItem} page-item`}>
                 <a
                   className={`${styles.PageLink} page-link`}
 
                   onClick={() => {
 
-                    if (page > 1) handlePageChange(page - 1);
+                    if (page > 1) Page(page - 1);
                   }}
                 >
                   <i className="bi bi-arrow-left"></i>
@@ -355,30 +341,29 @@ const ArticlePage = () => {
 
               {[...Array(totalPages)]
                 .map((_, i) => i + 1)
-                .filter((i) => i >= page - 1 && i <= page + 1)
                 .map((i) => (
-                  <li key={i} className={`${styles.PageItem} page-item`}>
-                    <a
+                  <a key={i} className={`${styles.PageItem} page-item`}>
+                    <li
                       className={`${styles.PageLink} page-link ${page === i ? styles.activePage : ''}`}
 
                       onClick={() => {
 
-                        handlePageChange(i);
+                        Page(i);
                       }}
                     >
                       {i}
-                    </a>
-                  </li>
+                    </li>
+                  </a>
                 ))}
 
               {/* 下一页按钮 */}
-              <li className={`${styles.PageItem} page-item ${page === totalPages ? 'disabled' : ''}`}>
+              <li className={`${styles.PageItem} page-item`}>
                 <a
                   className={`${styles.PageLink} page-link`}
 
                   onClick={() => {
 
-                    if (page < totalPages) handlePageChange(page + 1);
+                    if (page < totalPages) Page(page + 1);
                   }}
                 >
                   <i className="bi bi-arrow-right"></i>

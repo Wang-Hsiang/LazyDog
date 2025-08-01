@@ -161,42 +161,6 @@ export const deleteArticleS = async (id) => {
     throw new Error("刪除文章時出錯：" + error.message);
   }
 };
-
-// 搜尋文章
-export const searchKeywordS = async (keyword) => {
-  console.log("我在server端的try外面")
-  try {
-    // console.log("我在server端的try李面")
-    if (!keyword || keyword.trim() == "") {
-      return { error: "請提供有效的搜尋關鍵字" };
-    }
-    const [articles] = await pool.execute(
-      `SELECT articles.*,
-      article_img.url AS cover_image,
-      users.name AS name,
-      article_type.name AS category_name,
-      comments.id AS comment_id,
-       comments.content AS comment_content,
-       comment_users.name AS commenter_name, 
-       comment_users.user_img AS commenter_img
-      FROM articles 
-      LEFT JOIN article_img ON articles.id = article_img.article_id 
-      LEFT JOIN users ON articles.author_id = users.id
-      LEFT JOIN article_type ON articles.category_id = article_type.id
-      LEFT JOIN comments ON articles.id = comments.article_id 
-      LEFT JOIN users AS comment_users ON comments.user_id = comment_users.id
-      WHERE (articles.title LIKE ?) AND articles.is_deleted = 0 AND users.is_deleted = 0`,
-      [`%${keyword}%`]
-    );
-    // console.log(articles)
-    return articles;
-  } catch (error) {
-    // console.error("搜尋文章時出錯:", error);
-    throw new Error("搜尋文章時出錯：" + error.message);
-  }
-}
-
-
 // 根據使用者id調取所有該作者沒有被ban的文章
 export const getArticlesByAuthorS = async (author_id) => {
   try {

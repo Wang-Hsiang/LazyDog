@@ -23,7 +23,6 @@ export default function Comment({ content, author, author_img, id }) {
     const handleDelete = async () => {
         try {
             await deleteComment(id); // 調用刪除 API
-            // console.log(id)
             handleClose(); // 關閉 Modal
             window.location.reload(); // 重新加載頁面
         } catch (error) {

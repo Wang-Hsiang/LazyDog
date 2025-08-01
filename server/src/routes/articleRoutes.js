@@ -8,7 +8,6 @@ import {
   createArticle,
   deleteArticle,
   updateArticle,
-  searchKeyword,
   uploadController,
 } from "../controllers/articleController.js";
 import { getArticlesByAuthorS } from "../services/articleService.js";
@@ -39,7 +38,6 @@ const fileUpload = multer({
 
 router.use(express.static(resolve(__dirname, "../../public", "article_img")));
 router.get("/", getArticles);
-router.get("/search", searchKeyword); // search 要在 :id 前面
 router.get("/:id", getId);
 router.post("/", noFileUpload.none(), createArticle);
 router.delete("/:id", deleteArticle);

@@ -1,4 +1,4 @@
-import { getAllarticle, getIdS, createArticlesS, deleteArticleS, updateArticleS, searchKeywordS } from "../services/articleService.js";
+import { getAllarticle, getIdS, createArticlesS, deleteArticleS, updateArticleS } from "../services/articleService.js";
 import fs from 'fs';
 import path from 'path';
 
@@ -179,61 +179,5 @@ export const deleteArticle = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: error.message + "是我這裡出問題" });
    
-  }
-};
-
-
-export const searchKeyword = async (req, res) => {
-  const { keyword } = req.query;  // 從請求中獲取搜索關鍵字
-
-  try {
-    // 調用搜索函數獲取文章數據
-    const articles = await searchKeywordS(keyword);
-
-    if (articles.length === 0) {
-      return res.status(404).json({ message: "沒有找到相關的文章。" });
-    }
-
-    // 格式化日期函式（YYYY-MM-DD）
-    const formatDate = (date) => date ? new Date(date).toISOString().split('T')[0] : null;
-
-    // 使用一個物件來去重文章，文章的 id 作為鍵
-    const uniqueArticles = {};
-
-    // 遍歷所有文章，去除重複的文章
-    articles.forEach(article => {
-      if (!uniqueArticles[article.id]) {
-        // 如果文章沒有重複，就加入到 uniqueArticles 物件中
-        uniqueArticles[article.id] = {
-          id: article.id,
-          title: article.title,
-          content: article.content,
-          cover_image: article.cover_image,
-          category_name: article.category_name,
-          created_at: formatDate(article.created_at), // 只顯示日期
-          updated_at: formatDate(article.updated_at), // 只顯示日期
-          comments: []
-        };
-      }
-
-      // 處理文章的評論
-      if (article.comment_id) {
-        // 將評論信息添加到對應文章的評論列表中
-        uniqueArticles[article.id].comments.push({
-          content: article.comment_content,
-          author: article.commenter_name,
-          author_img: article.commenter_img || null,
-        });
-      }
-    });
-
-    // 返回去重後的文章數據
-    const result = Object.values(uniqueArticles);
-
-    return res.status(200).json(result);
-
-  } catch (error) {
-    console.error("搜索文章時出錯:", error);
-    return res.status(500).json({ error: "搜索文章時出錯：" + error.message });
   }
 };

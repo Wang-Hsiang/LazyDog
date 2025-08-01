@@ -20,7 +20,7 @@ export default function ArticleDetail() {
   const { id } = useParams(); // 取得網址中的文章 ID
   const { articles, article, comments, getArticle, loading, error } = useArticles();
 
-  const [visibleComments, setVisibleComments] = useState(3); // 控制顯示留言數量
+  const [Comments, setComments] = useState(3); // 控制顯示留言數量
   const [expanded, setExpanded] = useState(false); // 記錄展開狀態
 
   // 創建 useRef 來追蹤組件的掛載狀態和請求的有效性
@@ -47,11 +47,11 @@ export default function ArticleDetail() {
   if (error) return <p>錯誤: {error}</p>;
   if (!article) return <p>文章不存在</p>;
 
-  const toggleComments = () => {
+  const AllComments = () => {
     if (expanded) {
-      setVisibleComments(3);
+      setComments(3);
     } else {
-      setVisibleComments(comments.length);
+      setComments(comments.length);
     }
     setExpanded(!expanded);
   };
@@ -96,9 +96,9 @@ export default function ArticleDetail() {
                 {comments.length === 0 ? (
                   <p className="mt-3 ms-3">暫無評論，快來發表你的看法吧！</p>
                 ) : (
-                  comments.slice(0, visibleComments).map((comment, index) => (
+                  comments.slice(0, Comments).map((comment, index) => (
                     <Comment
-                      key={comment.id || index} // 使用 comment.id 作為 key 更穩定
+                      key={index} 
                       content={comment.content}
                       author={comment.author}
                       author_img={comment.author_img}
@@ -116,7 +116,7 @@ export default function ArticleDetail() {
               >
                 {comments.length > 3 && (
                   <button
-                    onClick={toggleComments}
+                    onClick={AllComments}
                     className={styles.moreComments}
                   >
                     {expanded ? "收起留言" : "顯示更多"}

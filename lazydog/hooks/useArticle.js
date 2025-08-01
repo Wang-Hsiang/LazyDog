@@ -9,11 +9,6 @@ function useArticles() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // 搜尋相關狀態
-    const [searchKeyword, setSearchKeyword] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [isSearching, setIsSearching] = useState(false);
-
     // 取得所有文章（列表用）
     const getArticles = useCallback(async () => {
         setLoading(true);
@@ -27,7 +22,7 @@ function useArticles() {
         } finally {
             setLoading(false);
         }
-    }, []); // ✅ 使用 useCallback 包裹，確保函式穩定
+    }, []); // ✅ 
 
     // 取得單篇文章（詳情用）
     const getArticle = useCallback(async (id, isActiveRef) => { 
@@ -89,7 +84,7 @@ function useArticles() {
         } finally {
             setLoading(false);
         }
-    }, []); // ✅ 使用 useCallback 包裹，確保函式穩定
+    }, []); // ✅ 
 
     // 更新文章
     const updateArticle = useCallback(async (id, updatedData) => {
@@ -111,7 +106,7 @@ function useArticles() {
         } finally {
             setLoading(false);
         }
-    }, []); // ✅ 使用 useCallback 包裹，確保函式穩定
+    }, []);  
 
     // 刪除文章
     const deleteArticle = useCallback(async (id) => {
@@ -126,44 +121,7 @@ function useArticles() {
         } finally {
             setLoading(false);
         }
-    }, []); // ✅ 使用 useCallback 包裹，確保函式穩定
-
-    // 搜尋文章
-    const searchArticles = useCallback(async (keyword) => {
-        if (!keyword.trim()) {
-            setSearchResults([]);
-            return;
-        }
-
-        setIsSearching(true);
-        try {
-            const response = await fetch(`${API_URL}/search?keyword=${encodeURIComponent(keyword)}`);
-            if (!response.ok) throw new Error('搜尋失敗');
-            const data = await response.json();
-            setSearchResults(data);
-        } catch (err) {
-            setError(err.message);
-            setSearchResults([]);
-        } finally {
-            setIsSearching(false);
-        }
-    }, []); // ✅ 使用 useCallback 包裹，確保函式穩定
-
-    // 根據 author_id 獲取文章
-
-
-    // 自動搜尋的 useEffect
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            if (searchKeyword) {
-                searchArticles(searchKeyword);
-            } else {
-                setSearchResults([]);
-            }
-        }, 500); // 500ms 防抖延遲
-
-        return () => clearTimeout(handler);
-    }, [searchKeyword, searchArticles]); // ✅ 依賴 searchKeyword 和 searchArticles
+    }, []);    
 
     // 在元件載入時自動取得文章
     useEffect(() => {
@@ -171,19 +129,16 @@ function useArticles() {
     }, [getArticles]); // ✅ 依賴 getArticles
 
     return {
-        articles: searchKeyword ? searchResults : articles,
+        articles,
         article,
         comments,
-        loading: loading || isSearching,
+        loading,
         error,
-        searchKeyword,
-        setSearchKeyword,
         getArticles,
         getArticle,
         createArticle,
         updateArticle,
         deleteArticle,
-        searchArticles,
     };
 }
 

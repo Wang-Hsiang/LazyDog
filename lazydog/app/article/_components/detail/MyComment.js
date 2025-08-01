@@ -25,10 +25,7 @@ const CommentSection = () => {
 
 
     // 設置默認頭像
-    
-    const modifiedAvatar = user?.avatar ? user.avatar.replace('/images/', '/') : '';
-   
-    console.log(modifiedAvatar)
+    const modifiedAvatar = user.avatar;
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!commentContent.trim()) {
