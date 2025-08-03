@@ -42,14 +42,15 @@ router.get("/:id", getId);
 router.post("/", noFileUpload.none(), createArticle);
 router.delete("/:id", deleteArticle);
 router.put("/:id", noFileUpload.none(), updateArticle);
-// 新增圖片上傳的路由，專門處理圖片上傳，Froala 的 imageUploadURL 就設定指向這裡
+
+// 文章編輯器中的圖片顯示路由
 router.post("/upload", fileUpload.single("file"), uploadController.handleUpload);
+// 文章圖片上傳的路由
 router.post("/upload/cover", fileUpload.single("file"), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
-
     // 返回上傳成功的文件信息，並且格式化為完整的 URL
     const fileUrl = `http://localhost:5000/api/articles/${req.file.filename}`;
     res.status(200).json({

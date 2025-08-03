@@ -8,7 +8,7 @@ export default function AsideCard({ id, title, cover_image, created_at }) {
     return (
         <>
             <Link
-                href={{ pathname: `/article/detail/${id}`, query: { list: "true" } }}
+                href={{ pathname: `/article/detail/${id}` }}
                 // className={styles.asideRead}
                 className={`${styles.asideRead} row mt-2`}
             >

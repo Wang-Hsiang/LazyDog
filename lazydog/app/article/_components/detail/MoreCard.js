@@ -6,7 +6,7 @@ export default function MoreCard({ id, title, cover_image }) {
     return (
         <>
             <Link
-                href={{ pathname: `/article/detail/${id}`, query: { list: "true" } }}
+                href={{ pathname: `/article/detail/${id}`}}
                 className={`${styles.moreLink} col-lg-3 col-sm-12`}>
                 <div className="ratio ratio-1x1">
                     <img

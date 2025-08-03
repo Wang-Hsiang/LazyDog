@@ -8,10 +8,9 @@ export default function ListCard({ id, title, name, category_name, created_at, c
   return (
     <>
       <Link
-        href={{ pathname: `/article/detail/${id}`, query: { list: "true" } }}
+        href={{ pathname: `/article/detail/${id}` }}
         className={styles.card}>
         <img
-          className='mb-2'
           src={cover_image}
           alt="文章封面"
         />

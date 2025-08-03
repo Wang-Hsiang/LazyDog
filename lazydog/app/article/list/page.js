@@ -37,7 +37,7 @@ const ArticlePage = () => {
     setCategoryStyle(categoryId);
     setPage(1);
   };
-   const filter = Category
+  const filter = Category
     ? articles.filter(article => article.category_id === Category)
     : articles;
 
@@ -47,7 +47,7 @@ const ArticlePage = () => {
     setPage(1); // 每次搜尋重置頁碼
   };
   const filteredArticles = filter.filter(article =>
-    article.title.toLowerCase().includes(SearchTing.toLowerCase()) 
+    article.title.toLowerCase().includes(SearchTing.toLowerCase())
   );
 
   // 排序
@@ -64,7 +64,7 @@ const ArticlePage = () => {
     (page - 1) * PageMax,
     page * PageMax
   );
-
+    console.log(Articles);
   // 分頁
   const totalPages = Math.ceil(sortedArticles.length / PageMax);
   const Page = (newPage) => {
@@ -116,9 +116,7 @@ const ArticlePage = () => {
             <div className={styles.asideCategory}>
               <h4 className='mb-3'>類別</h4>
               <a
-
                 onClick={() => {
-
                   CategorySelect(null); // 選擇「全部」
                 }}
               >
@@ -129,9 +127,7 @@ const ArticlePage = () => {
                 </p>
               </a>
               <a
-
                 onClick={() => {
-
                   CategorySelect(1); // 選擇「保健與營養」
                 }}
               >
@@ -140,9 +136,7 @@ const ArticlePage = () => {
                 </p>
               </a>
               <a
-
                 onClick={() => {
-
                   CategorySelect(5); // 選擇「開箱」
                 }}
               >
@@ -151,9 +145,7 @@ const ArticlePage = () => {
                 </p>
               </a>
               <a
-
                 onClick={() => {
-
                   CategorySelect(2); // 選擇「食譜」
                 }}
               >
@@ -162,9 +154,7 @@ const ArticlePage = () => {
                 </p>
               </a>
               <a
-
                 onClick={() => {
-
                   CategorySelect(3); // 選擇「善終」
                 }}
               >
@@ -173,9 +163,7 @@ const ArticlePage = () => {
                 </p>
               </a>
               <a
-
                 onClick={() => {
-
                   CategorySelect(4); // 選擇「行為知識」
                 }}
               >
@@ -236,9 +224,7 @@ const ArticlePage = () => {
                       style={{ width: '366px' }}
                     >
                       <a
-
-                        onClick={(e) => {
-
+                        onClick={() => {
                           CategorySelect(null); // 選擇「全部」
                         }}
                       >
@@ -249,9 +235,7 @@ const ArticlePage = () => {
                         </p>
                       </a>
                       <a
-
-                        onClick={(e) => {
-
+                        onClick={() => {
                           CategorySelect(1); // 選擇「保健與營養」
                         }}
                       >
@@ -260,9 +244,7 @@ const ArticlePage = () => {
                         </p>
                       </a>
                       <a
-
-                        onClick={(e) => {
-
+                        onClick={() => {
                           CategorySelect(5); // 選擇「開箱」
                         }}
                       >
@@ -271,9 +253,7 @@ const ArticlePage = () => {
                         </p>
                       </a>
                       <a
-
-                        onClick={(e) => {
-
+                        onClick={() => {
                           CategorySelect(2); // 選擇「食譜」
                         }}
                       >
@@ -283,13 +263,24 @@ const ArticlePage = () => {
                       </a>
                       <a
 
-                        onClick={(e) => {
+                        onClick={() => {
 
                           CategorySelect(3); // 選擇「善終」
                         }}
                       >
                         <p className={CategoryStyle === 3 ? styles.asideCategoryPA : styles.asideCategoryP}>
                           善終
+                        </p>
+                      </a>
+                      <a
+
+                        onClick={() => {
+
+                          CategorySelect(4); // 選擇「行為知識」
+                        }}
+                      >
+                        <p className={CategoryStyle === 4 ? styles.asideCategoryPA : styles.asideCategoryP}>
+                          行為知識
                         </p>
                       </a>
                     </div>
@@ -303,9 +294,9 @@ const ArticlePage = () => {
             <div
               className={styles.main}
             >
-              { Articles.map((article) => (
-                  <MainCard key={article.id} {...article} />
-                ))}
+              {Articles.map((article) => (
+                <MainCard key={article.id} {...article} />
+              ))}
             </div>
             <div >
               <h4 className={styles.RWDH4}>延伸閱讀</h4>
@@ -330,15 +321,12 @@ const ArticlePage = () => {
                   className={`${styles.PageLink} page-link`}
 
                   onClick={() => {
-
                     if (page > 1) Page(page - 1);
                   }}
                 >
                   <i className="bi bi-arrow-left"></i>
                 </a>
               </li>
-
-
               {[...Array(totalPages)]
                 .map((_, i) => i + 1)
                 .map((i) => (
@@ -372,8 +360,53 @@ const ArticlePage = () => {
             </ul>
           </nav>
         )}
+        {totalPages > 1 && (
+          <nav className="page">
+            <ul className={styles.ArticlePageRWD}>
+              {/* 前一页按钮 */}
+              <li className={`${styles.PageItem} page-item ${page === 1 ? 'disabled' : ''}`}>
+                <a
+                  className={`${styles.PageLink} page-link`}
+                  onClick={() => {
+                    if (page > 1) Page(page - 1);
+                  }}
+                >
+                  <i className="bi bi-arrow-left"></i>
+                </a>
+              </li>
 
+              {[...Array(totalPages)]
+                .map((_, i) => i + 1) 
+                .filter((i) => i >= page - 1 && i <= page + 1) 
+                .map((i) => (
+                  <li key={i} className={`${styles.PageItem} page-item`}>
+                    <a
+                      className={`${styles.PageLink} page-link ${page === i ? styles.activePage : ''}`} 
+                      onClick={() => {
+                        Page(i);
+                      }}
+                    >
+                      {i}
+                    </a>
+                  </li>
+                ))}
+
+              {/* 下一页按钮 */}
+              <li className={`${styles.PageItem} page-item ${page === totalPages ? 'disabled' : ''}`}>
+                <a
+                  className={`${styles.PageLink} page-link`}
+                  onClick={() => {
+                    if (page < totalPages) Page(page + 1);
+                  }}
+                >
+                  <i className="bi bi-arrow-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        )}
       </div>
+
     </>
   );
 };

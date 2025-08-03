@@ -9,16 +9,9 @@ const useUploadCover = () => {
         setError("No file selected"); // 使用 setError 設置錯誤
         return;
       }
-  
-      setIsLoading(true);
-      setError(null); // 清除之前的錯誤訊息
-  
       try {
-        // 創建 FormData 對象
         const formData = new FormData();
         formData.append("file", file); // "file" 是後端接收文件的名稱
-  
-        // 發送 POST 請求到 /upload/cover 路由
         const response = await fetch("http://localhost:5000/api/articles/upload/cover", {
           method: "POST",
           body: formData,
@@ -44,7 +37,7 @@ const useUploadCover = () => {
       }
     };
   
-    return { isLoading, error, uploadCover }; // 返回 error 和 setError
+    return { uploadCover }; // 返回 error 和 setError
   };
   
   export default useUploadCover;

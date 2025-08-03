@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, { useEffect, useRef } from 'react'
 import FroalaEditor from 'froala-editor'
 import 'froala-editor/js/languages/zh_tw.js'
 import 'froala-editor/css/froala_style.min.css'

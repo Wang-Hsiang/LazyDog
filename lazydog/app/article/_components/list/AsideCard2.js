@@ -7,10 +7,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 export default function AsideCard({ id, title, cover_image, created_at }) {
     return (
         <>
-
             <Link
-                href={{ pathname: `/article/detail/${id}`, query: { list: "true" } }}
-                // className={styles.asideRead}
+                href={{ pathname: `/article/detail/${id}`}}
                 className={`${styles.asideRead2} row mt-2`}
             >
                 <div
@@ -21,7 +19,6 @@ export default function AsideCard({ id, title, cover_image, created_at }) {
                             className="ratio ratio-1x1 w-100"
                         >
                             <img
-                                // className="w-100"
                                 src={cover_image}
                                 alt=""
                                 style={{ objectFit: 'cover' }}

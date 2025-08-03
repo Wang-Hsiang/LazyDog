@@ -33,7 +33,6 @@
 .main{
   display: flex;
   flex-direction: column;
-  gap: 25px;
   padding-bottom:100px;}
 
 .content {
@@ -238,6 +237,16 @@
     cursor: pointer;
   }
 }
+.ArticlePageRWD{
+  display: none;
+   padding: 0;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  .PageItem {
+    cursor: pointer;
+  }
+}
 .PageItem {
   width: 35px;
   height: 35px;
@@ -358,5 +367,11 @@
   .page{
     position: relative;
     top: 1150px;
+  }
+  .ArticlePage{
+    display: none;
+  }
+  .ArticlePageRWD{
+    display:flex;
   }
 }

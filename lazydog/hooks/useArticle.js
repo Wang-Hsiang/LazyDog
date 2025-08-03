@@ -25,7 +25,7 @@ function useArticles() {
     }, []); // ✅ 
 
     // 取得單篇文章（詳情用）
-    const getArticle = useCallback(async (id, isActiveRef) => { 
+    const getArticle = useCallback(async (id, isActiveRef) => {
         if (!id) {
             // 由於 id 為 null，直接返回，不會觸發加載狀態
             if (isActiveRef.current) { // 僅在有效時重置狀態
@@ -39,30 +39,21 @@ function useArticles() {
                 setLoading(true);
                 setError(null);
             }
-
             const response = await fetch(`${API_URL}/${id}`);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
             const data = await response.json();
             data.comments.forEach((comment) => {
                 comment.author_img = `http://localhost:5000/auth/${comment.author_img}`;
             });
-            if (isActiveRef.current) {
-                setArticle(data);
-                setComments(data.comments || []);
-                return data; // 返回文章資料
-            }
+            setArticle(data);
+            setComments(data.comments || []);
+            return data; // 返回文章資料
         } catch (err) {
             if (isActiveRef.current) {
                 setError(err.message);
                 setArticle(null);
             }
-        } finally {
-            if (isActiveRef.current) {
-                setLoading(false);
-            }
         }
-
         return null; // 如果請求無效或出錯，返回 null
     }, []);
 
@@ -76,7 +67,6 @@ function useArticles() {
                 body: JSON.stringify(newArticle),
             });
             if (!response.ok) throw new Error('無法新增文章');
-
             const createdArticle = await response.json();
             setArticles((prev) => [createdArticle, ...prev]);
         } catch (err) {
@@ -84,8 +74,7 @@ function useArticles() {
         } finally {
             setLoading(false);
         }
-    }, []); // ✅ 
-
+    }, []);
     // 更新文章
     const updateArticle = useCallback(async (id, updatedData) => {
         setLoading(true);
@@ -106,7 +95,7 @@ function useArticles() {
         } finally {
             setLoading(false);
         }
-    }, []);  
+    }, []);
 
     // 刪除文章
     const deleteArticle = useCallback(async (id) => {
@@ -121,7 +110,7 @@ function useArticles() {
         } finally {
             setLoading(false);
         }
-    }, []);    
+    }, []);
 
     // 在元件載入時自動取得文章
     useEffect(() => {

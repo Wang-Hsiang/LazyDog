@@ -16,19 +16,18 @@ import Swal from 'sweetalert2';
 
 export default function AddArticlePage() {
   const { createArticle } = useArticles();
-  const { uploadCover, isLoading, error } = useUploadCover(); // 使用圖片上傳 Hook
+  const { uploadCover  } = useUploadCover(); // 使用圖片上傳 Hook
   const { user } = useAuth(); // 獲取當前使用者的資料
   const router = useRouter(); // 使用 useRouter 進行路由跳轉
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState(''); // ✅ 儲存 Froala 內容
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [Category, setCategory] = useState('');
+  const [CoverImg, setCoverImg] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [imageUrl, setImageUrl] = useState(''); // ✅ 儲存上傳的圖片 URL
-
+  
   // 類別選項
-  const categoryOptions = [
+  const Options = [
     { id: 1, name: '保健與營養' },
     { id: 2, name: '食譜' },
     { id: 3, name: '善終' },
@@ -37,34 +36,31 @@ export default function AddArticlePage() {
   ];
 
   // 處理圖片變更
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
+  const SelectCover = (e) => {
+    const file = e.target.files[0];
     if (file) {
-      setSelectedImage(file);
+      setCoverImg(file);
       const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result);
       reader.readAsDataURL(file);
+      reader.onloadend = () => setImagePreview(reader.result);
     }
   };
 
   // 提交文章
-  const handleSubmit = async () => {
-    if (!title.trim() || !selectedCategory) {
+  const Submit = async () => {
+    if (!title.trim() || !Category) {
       Swal.fire("請填寫標題並選擇分類");
       return;
     }
-
     if (!user) {
       Swal.fire("請先登入");
       return;
     }
-
-    // 如果有選擇圖片，先上傳圖片
-    let uploadedImageUrl = imageUrl; // 預設使用已上傳的圖片 URL
-    if (selectedImage) {
+    let uploadImg = { };
+    if (CoverImg) {
       try {
-        uploadedImageUrl = await uploadCover(selectedImage);
-        console.log("後端返回的圖片 URL:", uploadedImageUrl);
+        uploadImg = await uploadCover(CoverImg);
+        console.log("後端返回的圖片 URL:", uploadImg);
       } catch (err) {
         console.error("圖片上傳失敗:", err);
         Swal.fire("圖片上傳失敗，請重試");
@@ -75,17 +71,14 @@ export default function AddArticlePage() {
     // 提交文章資料
     const newArticle = {
       title,
-      category_id: Number(selectedCategory),
+      category_id: Number(Category),
       content, // ✅ 使用 Froala 編輯器內容
-      article_img: uploadedImageUrl || "", // 使用上傳後的圖片 URL
+      article_img: uploadImg || "", // 使用上傳後的圖片 URL
       author_id: user.id,  // 把 author_id 加入到提交資料中
     };
 
     try {
       await createArticle(newArticle);  // 傳遞帶有 author_id 的文章資料到後端
-      console.log(newArticle)
-      // Swal.fire("文章新增成功！");
-      // router.push('/article/list'); // 跳轉到文章列表頁
       Swal.fire("文章新增成功").then(() => {
         router.push('/article/list');
     });
@@ -129,12 +122,12 @@ export default function AddArticlePage() {
               {/* 下拉選單 - 類別選擇 */}
               <select
                 className="form-select my-3"
-                value={selectedCategory}
+                value={Category}
                 style={{ width: '200px' }}
-                onChange={(e) => setSelectedCategory(Number(e.target.value))}
+                onChange={(e) => setCategory(Number(e.target.value))}
               >
                 <option value="">請選擇主題</option>
-                {categoryOptions.map((category) => (
+                {Options.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
                   </option>
@@ -156,7 +149,7 @@ export default function AddArticlePage() {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={handleImageChange}
+                  onChange={SelectCover}
                   style={{ marginBottom: '10px' }}
                 />
                 {imagePreview && (
@@ -182,7 +175,7 @@ export default function AddArticlePage() {
                 <button
                   type="button"
                   className={`mt-3  ${style.btn}`}
-                  onClick={handleSubmit}
+                  onClick={Submit}
                   disabled={isLoading} // 上傳中禁用按鈕
                 >
                   {isLoading ? '發布中...' : (

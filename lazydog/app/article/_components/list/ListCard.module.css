@@ -87,8 +87,8 @@
 
 .card {
   margin: 10px;
-  width: 818.69px;
-  height: 625px;
+  width: 800px;
+  height: 600px;
   border: none;
   display: flex;
   flex-direction:column;
@@ -103,9 +103,10 @@
 }
 
 .card img {
-  width: 818.69px;
-  height: 500px;
+  width: 800px;
+  height: 450px;
   object-fit: cover;
+  margin: none;
 }
 
 .cardDetail {
