@@ -4,7 +4,7 @@ import path from 'path';
 
 
 // 獲取所有文章
-export const getArticles = async (req,res) => {
+export const getArticles = async (req, res) => {
   try {
     const articles = await getAllarticle();
     if (articles.length === 0) {
@@ -57,9 +57,8 @@ export const getId = async (req, res) => {
       updated_at: formatDate(results[0].updated_at),
       comments: []
     };
-
     const commentMap = new Map(); // 用 Map 避免重複
-
+    console.log(article);
     results.forEach(row => {
       if (row.comment_id && !commentMap.has(row.comment_id) && row.is_deleted !== 1) {
         let authorImg = row.commenter_img; // 取得原始圖片
@@ -95,7 +94,7 @@ export const getId = async (req, res) => {
 
 export const createArticle = async (req, res) => {
   const { title, content, author_id, category_id, article_img } = req.body;
-  // console.log(req.body);
+  console.log("這裡是controller層的req.body"+req.body);
   try {
     // 呼叫服務層函數來創建文章
     const article = await createArticlesS({ title, content, author_id, category_id, article_img });
@@ -105,7 +104,7 @@ export const createArticle = async (req, res) => {
       message: "文章創建成功",
       article
     });
-    // console.log(article);
+    console.log("這裡是controller層的try內的article"+article);
   } catch (err) {
     // 如果有錯誤，返回錯誤響應
     console.log(err);
@@ -173,11 +172,11 @@ export const deleteArticle = async (req, res) => {
     const { id } = req.params;
     // console.log("Article ID:", id);
     const article = await deleteArticleS(id);
-  
+
 
     return res.json({ message: "文章刪除成功", deletedArticle: article }); // 成功刪除
   } catch (error) {
     return res.status(500).json({ error: error.message + "是我這裡出問題" });
-   
+
   }
 };

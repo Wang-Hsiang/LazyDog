@@ -23,8 +23,10 @@ const ArticlePage = () => {
   const PageMax = 5;
   const { user } = useAuth()
 
+
   // 判斷有無使用者登入
   const userLogin = (event) => {
+    console.log(user);
     if (!user) {
       event.preventDefault(); // 阻止預設跳轉行為
       window.location.href = "http://localhost:3000/login"; // 跳轉到登入頁
@@ -64,7 +66,6 @@ const ArticlePage = () => {
     (page - 1) * PageMax,
     page * PageMax
   );
-    console.log(Articles);
   // 分頁
   const totalPages = Math.ceil(sortedArticles.length / PageMax);
   const Page = (newPage) => {

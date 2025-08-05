@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -18,14 +18,25 @@ export default function ArticleDetail() {
   const { id } = useParams(); // 取得網址中的文章 ID
   const searchParams = useSearchParams();
   const isFromList = searchParams.get("list"); // 解析 Query String
-  const { articles, article, comments, getArticle, loading, error, cover_image } = useArticles()
+  const { article, getArticle, loading, error, } = useArticles()
 
+
+  const isActiveRef = useRef(true);
   // **當 ID 變更時，載入對應的文章**
   useEffect(() => {
-    if (id) {
-      getArticle(id);
-    }
-  }, [id]);
+     // 當 useEffect 運行時，確保旗標為 true
+     isActiveRef.current = true;
+ 
+     if (id) {
+       // ⚠️ 將 isActiveRef 傳遞給 getArticle
+       getArticle(id, isActiveRef);
+     }
+ 
+     // 清理函數：在組件卸載或依賴項 (id) 改變時執行
+     return () => {
+       isActiveRef.current = false; // 將旗標設置為 false，指示正在進行的請求結果應被忽略
+     };
+   }, [id, getArticle]);
 
   if (loading) return <p>載入中...</p>;
   if (error) return <p>錯誤: {error}</p>;
@@ -50,12 +61,12 @@ export default function ArticleDetail() {
                   { label: ` ${article?.title || "標題尚未加載"}`, href: "/article/list/detail", active: true },
                 ]}
               />
-             </div>
-              {/* 文章內容 */}
-              <Content article={article} /> {/* 傳遞文章資料給 Content 組件 */}
             </div>
+            {/* 文章內容 */}
+            <Content article={article} /> {/* 傳遞文章資料給 Content 組件 */}
           </div>
         </div>
-      </>
-      );
+      </div>
+    </>
+  );
 }

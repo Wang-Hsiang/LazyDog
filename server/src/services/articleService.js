@@ -96,6 +96,51 @@ export const createArticlesS = async (createArticle) => {
     connection.release();
   }
 };
+//   console.log("這裡是server層，還沒進入try中" + createArticle);
+//   const connection = await pool.getConnection();
+//   try {
+//     const { title, content, author_id, category_id, article_img } = createArticle;
+
+//     // 開始事務
+//     await connection.beginTransaction();
+
+//     // 第一步：插入文章資料到 articles 資料表
+//     const [result] = await connection.query(
+//       `INSERT INTO articles 
+//           (title, content, author_id, category_id, created_at, updated_at, is_deleted) 
+//           VALUES (?, ?, ?, ?, NOW(), NOW(), 0)`,
+//       [title, content, author_id, category_id]
+//     );
+
+//     const articleId = result.insertId; // 取得剛插入的文章的 ID
+
+//     // 第二步：判斷 article_img 是否存在，再插入 article_img 資料表
+//     if (article_img) { // <-- 在這裡加入判斷
+//       await connection.query(
+//         `INSERT INTO article_img (article_id, url) VALUES (?, ?)`,
+//         [articleId, article_img] // 插入對應的 article_id 和圖片 URL
+//       );
+//     }
+
+//     // 提交事務
+//     await connection.commit();
+
+//     return {
+//       id: articleId,
+//       title,
+//       content,
+//       author_id,
+//       category_id,
+//       article_img // 返回圖片 URL
+//     };
+//   } catch (err) {
+//     // 回滾事務
+//     await connection.rollback();
+//     throw new Error("文章創建失敗：" + err.message);
+//   } finally {
+//     connection.release();
+//   }
+// };
 
 
 // 編輯文章

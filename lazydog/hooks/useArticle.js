@@ -26,9 +26,12 @@ function useArticles() {
 
     // 取得單篇文章（詳情用）
     const getArticle = useCallback(async (id, isActiveRef) => {
+        console.log("正在嘗試獲取文章，ID 為:", id);
+        console.log("正在嘗試獲取文章，isActiveRef.current 為:",isActiveRef.current);
         if (!id) {
             // 由於 id 為 null，直接返回，不會觸發加載狀態
             if (isActiveRef.current) { // 僅在有效時重置狀態
+            
                 setArticle(null);
                 setComments([]);
             }
@@ -60,6 +63,9 @@ function useArticles() {
     // 新增文章
     const createArticle = useCallback(async (newArticle) => {
         setLoading(true);
+        if(newArticle){
+            console.log("前端自訂鉤子這裡有newArticle");
+        }
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -103,7 +109,6 @@ function useArticles() {
         try {
             const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
             if (!response.ok) throw new Error('無法刪除文章');
-
             setArticles((prev) => prev.filter((article) => article.id !== id));
         } catch (err) {
             setError(err.message);

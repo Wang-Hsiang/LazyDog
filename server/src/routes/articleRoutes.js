@@ -39,7 +39,7 @@ const fileUpload = multer({
 router.use(express.static(resolve(__dirname, "../../public", "article_img")));
 router.get("/", getArticles);
 router.get("/:id", getId);
-router.post("/", noFileUpload.none(), createArticle);
+router.post("/",noFileUpload.none(), createArticle);
 router.delete("/:id", deleteArticle);
 router.put("/:id", noFileUpload.none(), updateArticle);
 

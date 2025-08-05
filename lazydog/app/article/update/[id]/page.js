@@ -23,7 +23,7 @@ export default function UpdateArticlePage({ params }) {
   const { uploadCover, isLoading, error } = useUploadCover();
   const { user } = useAuth();
   const router = useRouter();
-  
+
   // 用 useRef 儲存內容，避免影響 re-render
   const contentRef = useRef("");
 
@@ -32,7 +32,7 @@ export default function UpdateArticlePage({ params }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
-  
+
   const articleId = params.id;
 
   // 內容變更時，只更新 useRef，不觸發 re-render
@@ -51,22 +51,56 @@ export default function UpdateArticlePage({ params }) {
     { id: 5, name: '開箱' }
   ], []);
 
+ const isActiveRef = useRef(true);
   // 獲取文章資料
-  useEffect(() => {
+ useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const article = await getArticle(articleId);
-        setTitle(article.title);
-        contentRef.current = article.content;  // 直接使用 useRef，不影響 re-render
-        setSelectedCategory(article.category_id);
-        setImageUrl(article.cover_image);
+        // 將 isActiveRef.current 作為第二個參數傳遞
+        const article = await getArticle(articleId, isActiveRef); 
+        if (article && isActiveRef.current) { // 確保元件仍處於掛載狀態才更新 state
+            setTitle(article.title);
+            contentRef.current = article.content;
+            setSelectedCategory(article.category_id);
+            setImageUrl(article.cover_image);
+        }
       } catch (error) {
-        console.error("獲取文章資料失敗:", error);
-        Swal.fire("無法獲取文章，請稍後重試");
+        if (isActiveRef.current) { // 確保元件仍處於掛載狀態才顯示錯誤
+            console.error("獲取文章資料失敗:", error);
+            Swal.fire("無法獲取文章，請稍後重試");
+        }
       }
     };
-
     fetchArticle();
+
+    // 在元件卸載時設定 isActiveRef.current 為 false
+    return () => {
+      isActiveRef.current = false;
+    };
+  }, [articleId, getArticle]);useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        // 將 isActiveRef.current 作為第二個參數傳遞
+        const article = await getArticle(articleId, isActiveRef); 
+        if (article && isActiveRef.current) { // 確保元件仍處於掛載狀態才更新 state
+            setTitle(article.title);
+            contentRef.current = article.content;
+            setSelectedCategory(article.category_id);
+            setImageUrl(article.cover_image);
+        }
+      } catch (error) {
+        if (isActiveRef.current) { // 確保元件仍處於掛載狀態才顯示錯誤
+            console.error("獲取文章資料失敗:", error);
+            Swal.fire("無法獲取文章，請稍後重試");
+        }
+      }
+    };
+    fetchArticle();
+
+    // 在元件卸載時設定 isActiveRef.current 為 false
+    return () => {
+      isActiveRef.current = false;
+    };
   }, [articleId, getArticle]);
 
   // 處理圖片變更
