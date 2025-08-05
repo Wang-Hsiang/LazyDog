@@ -18,7 +18,6 @@ export const getArticles = async (req, res) => {
       updated_at: new Date(article.updated_at).toISOString().split('T')[0],  // 只取日期
       cover_image: article.cover_image || "http://localhost:5000/api/articles/image4.jpg" // 設定預設圖片
     }));
-    // console.log(formattedArticles)
     res.json(formattedArticles);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -58,7 +57,7 @@ export const getId = async (req, res) => {
       comments: []
     };
     const commentMap = new Map(); // 用 Map 避免重複
-    console.log(article);
+    (article);
     results.forEach(row => {
       if (row.comment_id && !commentMap.has(row.comment_id) && row.is_deleted !== 1) {
         let authorImg = row.commenter_img; // 取得原始圖片
@@ -94,7 +93,7 @@ export const getId = async (req, res) => {
 
 export const createArticle = async (req, res) => {
   const { title, content, author_id, category_id, article_img } = req.body;
-  console.log("這裡是controller層的req.body"+req.body);
+  ("這裡是controller層的req.body"+req.body);
   try {
     // 呼叫服務層函數來創建文章
     const article = await createArticlesS({ title, content, author_id, category_id, article_img });
@@ -104,10 +103,10 @@ export const createArticle = async (req, res) => {
       message: "文章創建成功",
       article
     });
-    console.log("這裡是controller層的try內的article"+article);
+    ("這裡是controller層的try內的article"+article);
   } catch (err) {
     // 如果有錯誤，返回錯誤響應
-    console.log(err);
+    (err);
 
     res.status(500).json({
       message: "文章創建失敗",
@@ -170,7 +169,7 @@ export const updateArticle = async (req, res) => {
 export const deleteArticle = async (req, res) => {
   try {
     const { id } = req.params;
-    // console.log("Article ID:", id);
+    // ("Article ID:", id);
     const article = await deleteArticleS(id);
 
 
