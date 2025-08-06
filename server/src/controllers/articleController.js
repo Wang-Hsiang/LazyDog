@@ -93,7 +93,6 @@ export const getId = async (req, res) => {
 
 export const createArticle = async (req, res) => {
   const { title, content, author_id, category_id, article_img } = req.body;
-  ("這裡是controller層的req.body"+req.body);
   try {
     // 呼叫服務層函數來創建文章
     const article = await createArticlesS({ title, content, author_id, category_id, article_img });
@@ -103,7 +102,6 @@ export const createArticle = async (req, res) => {
       message: "文章創建成功",
       article
     });
-    ("這裡是controller層的try內的article"+article);
   } catch (err) {
     // 如果有錯誤，返回錯誤響應
     (err);
@@ -117,13 +115,9 @@ export const createArticle = async (req, res) => {
 }
 
 // 處理創建文章時的圖片上傳
-
-// controllers/uploadController.js
 export const uploadController = {
   handleUpload: (req, res) => {
     try {
-      // multer 成功後，檔案資訊會放在 req.file
-      // 這裡可以做：存 DB、記錄、或其他商業邏輯
       const filePath = `http://localhost:5000/api/articles/${req.file.filename}`
 
       // 最後回傳給前端

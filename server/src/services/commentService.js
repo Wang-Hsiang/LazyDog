@@ -85,9 +85,6 @@ export const getCommentByAuthorS = async (author_id) => {
       [author_id]
     );
 
-    // if (comment.length === 0) {
-    //   return ([]);
-    // }
     console.log(comment)
 
     return comment;

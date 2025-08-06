@@ -16,7 +16,7 @@ const useComment = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(commentData), // 將數據轉換為 JSON 字符串
+        body: JSON.stringify(commentData), 
       });
       if (!response.ok) {
         throw new Error(response.statusText || "留言創建失敗");

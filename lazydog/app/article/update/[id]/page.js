@@ -36,11 +36,11 @@ export default function UpdateArticlePage({ params }) {
   const articleId = params.id;
 
   // 內容變更時，只更新 useRef，不觸發 re-render
-  const handleContentChange = useCallback((newContent) => {
+  const ContentChange =(newContent) => {
     if (contentRef.current !== newContent) {
       contentRef.current = newContent;
     }
-  }, []);
+  };
 
   // 類別選項
   const categoryOptions = useMemo(() => [
@@ -77,34 +77,11 @@ export default function UpdateArticlePage({ params }) {
     return () => {
       isActiveRef.current = false;
     };
-  }, [articleId, getArticle]);useEffect(() => {
-    const fetchArticle = async () => {
-      try {
-        // 將 isActiveRef.current 作為第二個參數傳遞
-        const article = await getArticle(articleId, isActiveRef); 
-        if (article && isActiveRef.current) { // 確保元件仍處於掛載狀態才更新 state
-            setTitle(article.title);
-            contentRef.current = article.content;
-            setSelectedCategory(article.category_id);
-            setImageUrl(article.cover_image);
-        }
-      } catch (error) {
-        if (isActiveRef.current) { // 確保元件仍處於掛載狀態才顯示錯誤
-            console.error("獲取文章資料失敗:", error);
-            Swal.fire("無法獲取文章，請稍後重試");
-        }
-      }
-    };
-    fetchArticle();
-
-    // 在元件卸載時設定 isActiveRef.current 為 false
-    return () => {
-      isActiveRef.current = false;
-    };
   }, [articleId, getArticle]);
+  
 
   // 處理圖片變更
-  const handleImageChange = useCallback((file) => {
+  const ImageChange = useCallback((file) => {
     if (file) {
       setSelectedImage(file);
       const reader = new FileReader();
@@ -112,9 +89,8 @@ export default function UpdateArticlePage({ params }) {
       reader.readAsDataURL(file);
     }
   }, []);
-
-  // 提交文章
-  const handleSubmit = useCallback(async () => {
+  // 提交更新文章
+   const Submit =async () => {
     if (!title.trim() || !selectedCategory) {
       Swal.fire("請填寫標題並選擇分類");
       return;
@@ -125,10 +101,10 @@ export default function UpdateArticlePage({ params }) {
       return;
     }
 
-    let uploadedImageUrl = imageUrl;
+    let ImageUrl = imageUrl;
     if (selectedImage) {
       try {
-        uploadedImageUrl = await uploadCover(selectedImage);
+        ImageUrl = await uploadCover(selectedImage);
       } catch (err) {
         console.error("圖片上傳失敗:", err);
         Swal.fire("圖片上傳失敗，請重試");
@@ -141,7 +117,7 @@ export default function UpdateArticlePage({ params }) {
       title,
       category_id: Number(selectedCategory),
       content: contentRef.current, // 使用 useRef 儲存的內容
-      article_img: uploadedImageUrl || "",
+      article_img: ImageUrl || "",
       author_id: user.id
     };
 
@@ -154,7 +130,7 @@ export default function UpdateArticlePage({ params }) {
       console.error("提交文章失敗:", error);
       Swal.fire("文章更新失敗，請檢查網路連線");
     }
-  }, [title, selectedCategory, user, imageUrl, selectedImage, uploadCover, updateArticle, articleId, router]);
+  }
 
   return (
     <>
@@ -201,13 +177,13 @@ export default function UpdateArticlePage({ params }) {
                 <ImageUpload
                   imageUrl={imageUrl}
                   imagePreview={imagePreview}
-                  handleImageChange={handleImageChange}
+                  ImageChange={ImageChange}
                   error={error}
                 />
 
                 {/* 文章內容編輯器 */}
                 <FroalaEditorWrapper
-                  onContentChange={handleContentChange}
+                  onContentChange={ContentChange}
                   initialContent={contentRef.current} // 直接從 useRef 讀取
                 />
 
@@ -216,7 +192,7 @@ export default function UpdateArticlePage({ params }) {
                   <button
                     type="button"
                     className={`mt-3 ${styles.post}`}
-                    onClick={handleSubmit}
+                    onClick={Submit}
                     disabled={isLoading}
                   >
                     {isLoading ? '保存中...' : (

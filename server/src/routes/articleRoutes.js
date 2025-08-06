@@ -17,9 +17,6 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = express.Router();
 
-// 用於處理一般表單資料，不包含檔案
-const noFileUpload = multer();
-
 // 為圖片上傳設定儲存配置
 const uploadDir = path.join(process.cwd(), "public/article_img");
 const fileUpload = multer({
@@ -39,9 +36,9 @@ const fileUpload = multer({
 router.use(express.static(resolve(__dirname, "../../public", "article_img")));
 router.get("/", getArticles);
 router.get("/:id", getId);
-router.post("/",noFileUpload.none(), createArticle);
+router.post("/", createArticle);
 router.delete("/:id", deleteArticle);
-router.put("/:id", noFileUpload.none(), updateArticle);
+router.put("/:id", updateArticle);
 
 // 文章編輯器中的圖片顯示路由
 router.post("/upload", fileUpload.single("file"), uploadController.handleUpload);
@@ -51,10 +48,9 @@ router.post("/upload/cover", fileUpload.single("file"), (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
-    // 返回上傳成功的文件信息，並且格式化為完整的 URL
     const fileUrl = `http://localhost:5000/api/articles/${req.file.filename}`;
     res.status(200).json({
-      article_img: fileUrl, // 修改這裡
+      article_img: fileUrl,
     });
   } catch (error) {
     console.error("Error uploading file:", error);

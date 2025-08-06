@@ -63,9 +63,6 @@ function useArticles() {
     // 新增文章
     const createArticle = useCallback(async (newArticle) => {
         setLoading(true);
-        if(newArticle){
-            console.log("前端自訂鉤子這裡有newArticle");
-        }
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',

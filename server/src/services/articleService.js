@@ -60,24 +60,19 @@ export const createArticlesS = async (createArticle) => {
 
     // 開始事務
     await connection.beginTransaction();
-
-    // 第一步：插入文章資料到 articles 資料表
     const [result] = await connection.query(
       `INSERT INTO articles 
           (title, content, author_id, category_id, created_at, updated_at, is_deleted) 
           VALUES (?, ?, ?, ?, NOW(), NOW(), 0)`,
       [title, content, author_id, category_id]
     );
-    // (result)
-    // 第二步：將圖片 URL 插入 article_img 資料表，並與文章建立關聯
-    const articleId = result.insertId;  // 取得剛插入的文章的 ID
+    const articleId = result.insertId;  
     await connection.query(
       `INSERT INTO article_img (article_id, url) VALUES (?, ?)`,
-      [articleId, article_img]  // 插入對應的 article_id 和圖片 URL
+      [articleId, article_img]  
     );
 
     // 提交事務
-    // (req.body)
     await connection.commit();
 
     return {
@@ -105,23 +100,18 @@ export const updateArticleS = async (updateArticle) => {
   const connection = await pool.getConnection();
   try {
     const { id, title, content, author_id, category_id, article_img } = updateArticle;
-
-    // 開始事務
     await connection.beginTransaction();
-
-    // 第一步：更新 articles 資料表的文章內容
-    const [result] = await connection.query(
+    await connection.query(
       `UPDATE articles SET 
         title = ?, content = ?, author_id = ?, category_id = ?, updated_at = NOW()
         WHERE id = ?`,
       [title, content, author_id, category_id, id]
     );
 
-    // 第二步：更新 article_img 資料表中的圖片 URL（如果提供了新的圖片 URL）
     if (article_img) {
       await connection.query(
         `UPDATE article_img SET url = ? WHERE article_id = ?`,
-        [article_img, id]  // 更新對應的圖片 URL
+        [article_img, id] 
       );
     }
 

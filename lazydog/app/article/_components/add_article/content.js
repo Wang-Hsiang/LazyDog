@@ -106,7 +106,7 @@ export default function FroalaEditorWrapper({ onContentChange }) {
       }
       window.editorInstance = null
     }
-  }, []) // ⚠️ 移除 onContentChange 依賴，避免不必要的重新執行
+  }, []) 
 
   return (
     <>

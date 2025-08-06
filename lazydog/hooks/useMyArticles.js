@@ -24,7 +24,7 @@ export default function useMyArticles(userId) {
       setArticles(data);
       console.log(data);
     } catch (err) {
-      setArticles(-1); // ❌ 捕捉到錯誤時，也設定 -1
+      setArticles(-1);
       setError(err.message);
     } finally {
       setLoading(false);

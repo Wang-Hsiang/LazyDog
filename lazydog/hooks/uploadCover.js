@@ -7,12 +7,12 @@ const useUploadCover = () => {
     const uploadCover = async (file) => {
       
       if (!file) {
-        setError("No file selected"); // 使用 setError 設置錯誤
+        setError("No file selected");
         return;
       }
       try {
         const formData = new FormData();
-        formData.append("file", file); // "file" 是後端接收文件的名稱
+        formData.append("file", file); 
        
         const response = await fetch("http://localhost:5000/api/articles/upload/cover", {
           method: "POST",
