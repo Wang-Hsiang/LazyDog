@@ -15,7 +15,7 @@ export default function useMyArticles(userId) {
     try {
       const response = await fetch(`${API_URL}/author/${userId}`);
       if (!response.ok) {
-        setArticles(-1); // ❌ 設定 -1，代表錯誤
+        setArticles(-1); 
         setError("無法獲取作者的文章");
         return;
       }

@@ -18,7 +18,7 @@ export default function MyArticle() {
   const { articles } = useMyArticles(userId); // ✅ 只載入該用戶的文章
 
   useEffect(() => {
-    if (articles === -1 || (Array.isArray(articles) && articles.length > 0)) {
+    if (articles === -1 ||articles.length > 0) {
       setCheckingAuth(false);
     }
   }, [articles]);
@@ -69,7 +69,7 @@ export default function MyArticle() {
             </li>
           </ul>
 
-          {/* 如果 articles === -1，顯示「您還未發表過文章」 */}
+          
           {articles === -1 ? (
             <div className={styles.container2}>
               <div>您還未發表過文章</div>
